@@ -1,6 +1,6 @@
 import pygame
-from state_manager import GameStateManager
-from states import MainMenuState
+from core.state_manager import GameStateManager
+from states.main_menu import MainMenuState
 
 
 class Game:
@@ -16,7 +16,7 @@ class Game:
         self.running = True
 
         self.state_manager = GameStateManager(game=self)
-        self.state_manager.change_state(MainMenuState(game=self))
+        self.state_manager.change(MainMenuState(game=self))
 
     def run(self):
         while self.running:
