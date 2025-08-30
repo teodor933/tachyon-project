@@ -1,20 +1,10 @@
 import pygame
-
-pygame.init()
-screen = pygame.display.set_mode((1920, 1080))
-clock = pygame.time.Clock()
-running = True
-
-while running:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    screen.fill("white")
-
-    pygame.display.flip()
-
-    clock.tick(60)
+from game import Game
 
 pygame.quit()
+
+if __name__ == "__main__":
+    pygame.init()
+    game = Game(screen_width=1920, screen_height=1080, title="Tachyon")
+    game.run()
+    pygame.quit()
