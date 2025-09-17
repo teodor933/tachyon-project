@@ -10,7 +10,10 @@ class State(ABC):
     def __init__(self, game):
         self.game = game
 
-    def on_exit(self):
+    def on_enter(self) -> None:
+        pass
+
+    def on_exit(self) -> None:
         pass
 
     @abstractmethod
@@ -19,8 +22,13 @@ class State(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def fixed_update(self, dt_fixed: float) -> None:
+        """Fixed-rate update for physics and deterministic step."""
+        raise NotImplementedError
+
+    @abstractmethod
     def update(self, dt: float) -> None:
-        """Update the game state. dt is delta time in seconds."""
+        """Variable-rate update for non-physics logic."""
         raise NotImplementedError
 
     @abstractmethod

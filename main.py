@@ -1,10 +1,16 @@
 import pygame
 from game import Game
 
-pygame.quit()
+config = {
+    "screen_width": 1600,
+    "screen_height": 800,
+    "title": "Tachyon",
+    "fps": 240
+}
+
 
 if __name__ == "__main__":
     pygame.init()
-    game = Game(screen_width=1920, screen_height=1080, title="Tachyon")
+    game = Game(**config)
     game.run()
     pygame.quit()

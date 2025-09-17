@@ -3,6 +3,8 @@ BLACK = (0, 0, 0)
 RED   = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE  = (0, 0, 255)
+GREY = (200, 200, 200)
+DARK_GREY = (40, 40, 40)
 
 PPM = 100.0 # pixels per meter
 
@@ -10,3 +12,11 @@ GRAVITY = -9.81
 
 MAX_FPS = 240
 PHYSICS_HZ = 240
+
+LAYER_BACKGROUND = 0
+LAYER_WORLD = 10
+LAYER_ENTITIES = 20
+LAYER_EFFECTS = 30
+LAYER_UI = 40
+
+GRID_SPACING_M = 1.0 # metre fr

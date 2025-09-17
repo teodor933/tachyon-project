@@ -1,13 +1,16 @@
 import pygame
+import random
+import math
 from states.base import State
 from states.play import PlayState
 from constants import BLACK, WHITE
+
 
 class MainMenuState(State):
     def __init__(self, game):
         super().__init__(game)
 
-    def handle_events(self, events):
+    def handle_events(self, events) -> None:
         for event in events:
             if event.type == pygame.QUIT:
                 self.game.running = False
@@ -17,10 +20,13 @@ class MainMenuState(State):
                 elif event.key == pygame.K_ESCAPE:
                     self.game.running = False
 
-    def update(self, dt):
+    def fixed_update(self, dt_fixed: float) -> None:
         pass
 
-    def render(self, screen):
+    def update(self, dt) -> None:
+        pass
+
+    def render(self, screen) -> None:
         screen.fill(WHITE)
         font = pygame.font.SysFont(name="Consolas", size=48)
         text = font.render("Tachyon: Press Enter to Start", True, BLACK)
