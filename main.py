@@ -1,16 +1,20 @@
 import pygame
-from game import Game
+from engine.core.game_engine import GameEngine
+from game.scenes.main_menu import MainMenuScene
 
-config = {
-    "screen_width": 1600,
-    "screen_height": 800,
-    "title": "Tachyon",
-    "fps": 240
-}
+def main():
+    # create and configure the engine
+    engine = GameEngine(
+        width=1280,
+        height=720,
+        title="Tachyon",
+        fps=60
+    )
 
+    # start with main menu
+    engine.change_scene(MainMenuScene)
+
+    engine.run()
 
 if __name__ == "__main__":
-    pygame.init()
-    game = Game(**config)
-    game.run()
-    pygame.quit()
+    main()
