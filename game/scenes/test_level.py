@@ -8,6 +8,7 @@ from engine.components.player_controller import PlayerController
 from engine.systems.physics_system import PhysicsSystem
 from engine.systems.render_system import RenderSystem
 from engine.systems.input_system import InputSystem
+from engine.systems.animation_system import PlayerAnimationSystem
 
 
 class TestLevel(Scene):
@@ -16,6 +17,7 @@ class TestLevel(Scene):
         # added systems in the order they should execute
         self.add_system(InputSystem())
         self.add_system(PhysicsSystem(gravity=-9.8 * 150)) # adjust later
+        self.add_system(PlayerAnimationSystem(stretch_factor=0.3, squish_factor=0.3))
         self.add_system(RenderSystem(self.engine.screen))
 
         # create player
