@@ -3,7 +3,7 @@ from engine.core.scene import Scene
 from engine.components.transform import Transform
 from engine.components.sprite import Sprite
 from engine.components.rigidbody import RigidBody
-from engine.components.collider import BoxCollider
+from engine.components.collider import BoxCollider, PhysicsMaterial
 from engine.components.player_controller import PlayerController
 from engine.systems.physics_system import PhysicsSystem
 from engine.systems.render_system import RenderSystem
@@ -55,14 +55,18 @@ class TestLevel(Scene):
         player.add_component(BoxCollider(
             width=32,
             height=32,
-            is_static=False
+            is_static=False,
+            material=PhysicsMaterial(
+                static_friction=0.8,
+                dynamic_friction=0.6,
+                restitution=0.0
+            )
         ))
         player.add_component(PlayerController(
             move_speed=300,
             jump_force=650,
             max_jumps=2,
             acceleration=2000,
-            friction=15,
             air_control=1
         ))
 
@@ -81,7 +85,12 @@ class TestLevel(Scene):
         ground.add_component(BoxCollider(
             width=1200,
             height=40,
-            is_static=True
+            is_static=True,
+            material=PhysicsMaterial(
+                static_friction=0.9,
+                dynamic_friction=0.8,
+                restitution=0.0
+            )
         ))
 
         return ground
@@ -97,7 +106,12 @@ class TestLevel(Scene):
         platform.add_component(BoxCollider(
             width=width,
             height=height,
-            is_static=True
+            is_static=True,
+            material=PhysicsMaterial(
+                static_friction=0.8,
+                dynamic_friction=0.6,
+                restitution=0.0
+            )
         ))
 
         return platform
@@ -113,7 +127,12 @@ class TestLevel(Scene):
         wall.add_component(BoxCollider(
             width=width,
             height=height,
-            is_static=True
+            is_static=True,
+            material=PhysicsMaterial(
+                static_friction=0.9,
+                dynamic_friction=0.8,
+                restitution=0.0
+            )
         ))
 
         return wall

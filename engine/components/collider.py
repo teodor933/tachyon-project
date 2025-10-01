@@ -1,6 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import pygame
 from engine.ecs.component import Component
+
+@dataclass
+class PhysicsMaterial(Component):
+    static_friction: float = 0.6
+    dynamic_friction: float = 0.5
+    restitution: float = 0.0 # 0 = no bounce, 1 = perfectly elastic
 
 @dataclass
 class BoxCollider(Component):
@@ -8,7 +14,8 @@ class BoxCollider(Component):
     height: float
     offset: pygame.Vector2 = None # offset from the transform position
     is_trigger: bool = False # detects collisions only
-    is_static: bool = False # does not move, like platforms
+    is_static: bool = False # does not move, like platforms, infinite mass
+    material: PhysicsMaterial = field(default_factory=PhysicsMaterial)
 
     def __post_init__(self):
         if self.offset is None:
@@ -23,3 +30,6 @@ class BoxCollider(Component):
             self.width,
             self.height
         ) # (x, y) for rect objects is the top-left position, where x increases to the right and y increases downwards
+
+    def half_extents(self) -> pygame.Vector2:
+        return pygame.Vector2(self.width * 0.5, self.height * 0.5)

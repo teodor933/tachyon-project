@@ -40,9 +40,6 @@ class InputSystem(System):
                 else:
                     # in air
                     rb.add_force(pygame.Vector2(move_x * controller.acceleration * controller.air_control, 0))
-            elif controller.is_grounded:
-                # add temporary friction to slow down to zero
-                rb.velocity.x *= (1 - controller.friction * dt)
 
             # jumping
             if keys[pygame.K_SPACE]:
