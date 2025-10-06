@@ -8,7 +8,7 @@ def main():
         width=1280,
         height=720,
         title="Tachyon",
-        fps=60
+        fps=240
     )
 
     # start with main menu

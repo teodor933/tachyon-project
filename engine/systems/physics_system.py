@@ -33,8 +33,6 @@ class PhysicsSystem(System):
         # reset grounded state for all controllers, to manually set through contacts
         for entity in world.get_entities_with(PlayerController):
             controller = entity.get_component(PlayerController)
-            print(entity.get_component(RigidBody).velocity)
-            print(controller.is_grounded)
             controller.is_grounded = False
 
         # apply physics calculations to entities

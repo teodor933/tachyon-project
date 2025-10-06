@@ -45,4 +45,5 @@ class GameEngine:
             # update display
             pygame.display.flip()
 
+        self.current_scene.on_exit()
         pygame.quit()

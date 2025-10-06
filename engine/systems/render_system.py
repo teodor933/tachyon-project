@@ -1,18 +1,21 @@
 import pygame
 
+from engine.components.collider import BoxCollider
 from engine.components.sprite import Sprite
 from engine.components.transform import Transform
 from engine.systems.base import System
 
 class RenderSystem(System):
-    """Handles rendering of all sprites"""
-    def __init__(self, screen):
+    """Handles rendering of all sprites using a ResourceManager."""
+    def __init__(self, screen, resource_manager):
         super().__init__()
         self.screen = screen
+        self.resource_manager = resource_manager
         self.camera_offset = pygame.Vector2(0, 0)
+        self.background_color = (255, 255, 255)
 
     def update(self, world, dt):
-        self.screen.fill((255, 255, 255))
+        self.screen.fill(self.background_color)
 
         renderables = world.get_entities_with(Sprite, Transform)
 
@@ -25,10 +28,20 @@ class RenderSystem(System):
             if not sprite.visible:
                 continue
 
-            image = sprite.image
+            image = self.resource_manager.get_asset(sprite.asset_id)
+            if not image:
+                continue
+
+            # copy to avoid modifying the saved asset
+            image = image.copy()
+
+            collider = entity.get_component(BoxCollider)  # Changed from string to class
+            if collider and image.get_width() == 1 and image.get_height() == 1:
+                size = (int(collider.width * transform.scale.x), int(collider.height * transform.scale.y))
+                image = pygame.transform.scale(image, size)
 
             # apply new scale if needed
-            if transform.scale != (1, 1):
+            elif transform.scale != (1, 1):
                 size = (int(image.get_width() * transform.scale.x),
                         int(image.get_height() * transform.scale.y))
                 image = pygame.transform.scale(image, size)

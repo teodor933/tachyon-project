@@ -1,0 +1,26 @@
+{
+  "Player": {
+    "save_on_quit": true,
+    "components": {
+      "Transform": {},
+      "Sprite": {"asset_id": "player_surface", "layer": 10 },
+      "RigidBody": {"mass": 1.0, "gravity_scale": 1.0, "drag": 0.05, "max_velocity": [800, 1600] },
+      "BoxCollider": {"width": 32, "height": 32, "material": {"static_friction": 0.8, "dynamic_friction": 0.6} },
+      "PlayerController": {"move_speed": 300, "jump_force": 650, "max_jumps": 2, "acceleration": 2000, "air_control": 1 }
+    }
+  },
+  "Platform": {
+    "components": {
+      "Transform": {},
+      "Sprite": { "asset_id": "platform_surface", "layer": 1 },
+      "BoxCollider": { "is_static": true, "material": {"static_friction": 0.8, "dynamic_friction": 0.6} }
+    }
+  },
+  "Wall": {
+    "components": {
+      "Transform": {},
+      "Sprite": { "asset_id": "wall_surface", "layer": 1 },
+      "BoxCollider": { "is_static": true, "material": {"static_friction": 0.9, "dynamic_friction": 0.8} }
+    }
+  }
+}
