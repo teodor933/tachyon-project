@@ -1,8 +1,38 @@
 {
   "scene_settings": {
     "gravity": -1470,
-    "background_colour": [250, 50, 200]
+    "background_color": [50, 50, 100]
   },
+  "systems": [
+    {
+      "type": "InputActionsSystem",
+      "config": {"map_path":  "data/input_actions.json"}
+    },
+    {
+      "type": "PlayerControlSystem",
+      "config": {}
+    },
+    {
+      "type": "PhysicsSystem",
+      "config": {
+        "gravity": [0, 980],
+        "iterations": 8
+      }
+    },
+    {
+      "type": "PlayerAnimationSystem",
+      "config": {
+        "stretch_factor": 0.2,
+        "squish_factor": 0.2
+      }
+    },
+    {
+      "type": "RenderSystem",
+      "config": {
+        "background_color": [30, 30, 50]
+      }
+    }
+  ],
   "assets": {
     "player_surface": {
       "type": "surface", "size": [32, 32], "colour": [255, 100, 100]

@@ -5,6 +5,7 @@ from engine.components.collider import BoxCollider, PhysicsMaterial
 from engine.components.player_controller import PlayerController
 from engine.components.rigidbody import RigidBody
 from engine.components.transform import Transform
+from engine.ecs.registry import register_system, SystemPhase
 from engine.systems.base import System
 
 def combine_restitution(a: PhysicsMaterial, b: PhysicsMaterial) -> float:
@@ -16,20 +17,29 @@ def combine_friction(a: PhysicsMaterial, b: PhysicsMaterial):
     mu_d = math.sqrt(a.dynamic_friction * b.dynamic_friction)
     return mu_s, mu_d
 
-
+@register_system("PhysicsSystem", phase=SystemPhase.PHYSICS)
 class PhysicsSystem(System):
     """Handles physics simulation"""
-    def __init__(self, gravity=-9.8, solver_iterations=8, baumgarte=0.8, slop=0.01, restitution_velocity_threshold=1.0):
+
+    @classmethod
+    def from_config(cls, config, **kwargs):
+        gravity = tuple(config.get("gravity", (0, 980)))
+        iterations = config.get("iterations", 8)
+        return cls(gravity=gravity, solver_iterations=iterations)
+
+    def __init__(self, gravity=(0, 980), solver_iterations=8, baumgarte=0.8, slop=0.01, restitution_velocity_threshold=1.0):
         super().__init__()
-        self.gravity = pygame.Vector2(0, -gravity)
+        self.gravity = pygame.Vector2(gravity)
         self.solver_iterations = solver_iterations
         self.baumgarte = baumgarte  # % of penetration to solve per step with position correction
         self.slop = slop  # small penetration tolerated before we try a correction pass
         self.restitution_velocity_threshold = restitution_velocity_threshold # limit bounces on objects
+        self.event_bus = None
+
+    def on_enter(self, world):
+        self.event_bus = world.get_resource("event_bus")
 
     def update(self, world, dt):
-        bodies = world.get_entities_with(RigidBody, Transform)
-
         # reset grounded state for all controllers, to manually set through contacts
         for entity in world.get_entities_with(PlayerController):
             controller = entity.get_component(PlayerController)
@@ -37,7 +47,7 @@ class PhysicsSystem(System):
 
         # apply physics calculations to entities
         # entities with a rigidbody and transform only
-        for entity in bodies:
+        for entity in world.get_entities_with(RigidBody, Transform):
             rb = entity.get_component(RigidBody)
             transform = entity.get_component(Transform)
 
@@ -75,44 +85,37 @@ class PhysicsSystem(System):
 
         self._update_grounded_flags(contacts, world)
 
-    @staticmethod
-    def _is_static(entity, collider: BoxCollider):
-        rb = entity.get_component(RigidBody)
-        if collider.is_static:
-            return True
-        if rb is None:
-            return True
-        if rb.is_kinematic:
-            return True
-        return False
-
     def _build_contacts(self, world):
         colliders = world.get_entities_with(Transform, BoxCollider)
         contacts = []
 
         for i in range(len(colliders)):
             entity_a = colliders[i]
-            a_tr = entity_a.get_component(Transform)
-            a_col = entity_a.get_component(BoxCollider)
-
-            if a_col.is_trigger:
-                continue
 
             for j in range(i + 1, len(colliders)):
                 entity_b = colliders[j]
-                b_tr = entity_b.get_component(Transform)
-                b_col = entity_b.get_component(BoxCollider)
 
-                if b_col.is_trigger:
+                a_collider = entity_a.get_component(BoxCollider)
+                b_collider = entity_b.get_component(BoxCollider)
+
+                # check layers and masks
+                if not (a_collider.layer & b_collider.mask and b_collider.layer & a_collider.mask):
                     continue
 
+                # check if both are static
+                if self._is_static(entity_a, a_collider) and self._is_static(entity_b, b_collider):
+                    continue
+
+                a_tr = entity_a.get_component(Transform)
+                b_tr = entity_b.get_component(Transform)
+
                 # half extents of colliders
-                a_he = a_col.half_extents()
-                b_he = b_col.half_extents()
+                a_he = a_collider.half_extents()
+                b_he = b_collider.half_extents()
 
                 # centres of colliders
-                a_centre = pygame.Vector2(a_tr.position.x + a_col.offset.x, a_tr.position.y + a_col.offset.y)
-                b_centre = pygame.Vector2(b_tr.position.x + b_col.offset.x, b_tr.position.y + b_col.offset.y)
+                a_centre = pygame.Vector2(a_tr.position.x + a_collider.offset.x, a_tr.position.y + a_collider.offset.y)
+                b_centre = pygame.Vector2(b_tr.position.x + b_collider.offset.x, b_tr.position.y + b_collider.offset.y)
 
                 dx = b_centre.x - a_centre.x
                 overlap_x = (a_he.x + b_he.x) - abs(dx)
@@ -124,18 +127,31 @@ class PhysicsSystem(System):
                 if overlap_y <= 0: # if current y distance is greater than the min distance, no collision
                     continue
 
+                if a_collider.is_trigger or b_collider.is_trigger:
+                    if self.event_bus:
+                        self.event_bus.emit("trigger_enter", entity_a, entity_b)
+                    continue
+
                 if overlap_x < overlap_y:
-                    normal_x = 1.0 if dx > 0 else -1.0
-                    normal = pygame.Vector2(normal_x, 0.0)
+                    normal = pygame.Vector2(1.0 if dx > 0 else -1.0, 0.0)
                     penetration = overlap_x
                 else:
-                    normal_y = 1.0 if dy > 0 else -1.0
-                    normal = pygame.Vector2(0.0, normal_y)
+                    normal = pygame.Vector2(0.0, 1.0 if dy > 0 else -1.0)
                     penetration = overlap_y
 
                 contacts.append(Contact(entity_a, entity_b, normal, penetration))
 
         return contacts
+
+    @staticmethod
+    def _is_static(entity, collider: BoxCollider):
+        if collider.is_static:
+            return True
+
+        rb = entity.get_component(RigidBody)
+        if rb is None or rb.is_kinematic:
+            return True
+        return False
 
     def _solve_contact_velocity(self, contact, dt):
         entity_a = contact.entity_a

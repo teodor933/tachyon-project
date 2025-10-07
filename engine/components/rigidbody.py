@@ -1,15 +1,18 @@
 from dataclasses import dataclass, field
 import pygame
 from engine.ecs.component import Component
+from engine.ecs.registry import register_component
 
+
+@register_component("RigidBody")
 @dataclass
 class RigidBody(Component):
     mass: float = 1.0
 
-    velocity: pygame.Vector2 = field(default_factory=lambda: pygame.Vector2(0, 0))
+    velocity: pygame.Vector2 = field(default_factory=lambda: pygame.Vector2(0, 0), metadata={"save": True})
     max_velocity: pygame.Vector2 = field(default_factory=lambda: pygame.Vector2(1000, 1000))
-
     acceleration: pygame.Vector2 = field(default_factory=lambda: pygame.Vector2(0, 0))
+
     gravity_scale: float = 1.0
     drag: float = 0.0 # air resistance
     is_kinematic: bool = False # not affected by forces while True

@@ -3,7 +3,7 @@ import pygame
 
 class GameEngine:
     """Main game engine class"""
-    def __init__(self, width=1280, height=720, title="Tachyon Engine", fps=60):
+    def __init__(self, width=1280, height=720, title="Tachyon Engine", fps=60, fixed_fps=120):
         pygame.init()
 
         self.screen = pygame.display.set_mode((width, height))
@@ -12,6 +12,9 @@ class GameEngine:
         self.clock = pygame.time.Clock()
         self.running = True
         self.fps = fps
+
+        self.fixed_dt = 1.0 / fixed_fps
+        self._accumulator = 0.0
 
         self.current_scene = None
         self.next_scene = None
@@ -40,10 +43,18 @@ class GameEngine:
 
             # update current scene
             if self.current_scene:
+                # using an accumulator to simulate fixed step updates
+                self._accumulator += dt
+                while self._accumulator >= self.fixed_dt:
+                    self.current_scene.fixed_update(self.fixed_dt)
+                    self._accumulator -= self.fixed_dt
+
+                # variable step updates for rendering, input detection, etc
                 self.current_scene.update(dt)
 
             # update display
             pygame.display.flip()
 
-        self.current_scene.on_exit()
+        if self.current_scene:
+            self.current_scene.on_exit()
         pygame.quit()

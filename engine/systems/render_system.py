@@ -3,16 +3,23 @@ import pygame
 from engine.components.collider import BoxCollider
 from engine.components.sprite import Sprite
 from engine.components.transform import Transform
+from engine.ecs.registry import register_system, SystemPhase
 from engine.systems.base import System
 
+@register_system("RenderSystem", phase=SystemPhase.RENDER)
 class RenderSystem(System):
     """Handles rendering of all sprites using a ResourceManager."""
-    def __init__(self, screen, resource_manager):
+
+    @classmethod
+    def from_config(cls, config, engine=None, resource_manager=None, **kwargs):
+        return cls(engine.screen, resource_manager, config.get("background_color", (255, 255, 255)))
+
+    def __init__(self, screen, resource_manager, background_color=(255, 255, 255)):
         super().__init__()
         self.screen = screen
         self.resource_manager = resource_manager
         self.camera_offset = pygame.Vector2(0, 0)
-        self.background_color = (255, 255, 255)
+        self.background_color = background_color
 
     def update(self, world, dt):
         self.screen.fill(self.background_color)

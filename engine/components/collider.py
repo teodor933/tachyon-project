@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 import pygame
 from engine.ecs.component import Component
+from engine.ecs.registry import register_component
+
 
 @dataclass
 class PhysicsMaterial(Component):
@@ -8,14 +10,18 @@ class PhysicsMaterial(Component):
     dynamic_friction: float = 0.5
     restitution: float = 0.0 # 0 = no bounce, 1 = perfectly elastic
 
+
+@register_component("BoxCollider")
 @dataclass
 class BoxCollider(Component):
     width: float
     height: float
-    offset: pygame.Vector2 = None # offset from the transform position
+    offset: pygame.Vector2 = field(default_factory=lambda: pygame.Vector2(0, 0)) # offset from the transform position
     is_trigger: bool = False # detects collisions only
     is_static: bool = False # does not move, like platforms, infinite mass
     material: PhysicsMaterial = field(default_factory=PhysicsMaterial)
+    layer: int = 1
+    mask: int = -1 # collide with all layers by default
 
     def __post_init__(self):
         if self.offset is None:

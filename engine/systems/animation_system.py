@@ -1,11 +1,19 @@
 import pygame
+
+from engine.ecs.registry import register_system, SystemPhase
 from engine.systems.base import System
 from engine.components.player_controller import PlayerController
 from engine.components.rigidbody import RigidBody
 from engine.components.transform import Transform
 
+
+@register_system("PlayerAnimationSystem", phase=SystemPhase.ANIMATION)
 class PlayerAnimationSystem(System):
     """Handles visual effects for the player, like squashing and stretching."""
+
+    @classmethod
+    def from_config(cls, config, **kwargs):
+        return cls(**config)
 
     def __init__(self, stretch_factor=0.2, squish_factor=0.2):
         super().__init__()

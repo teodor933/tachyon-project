@@ -2,6 +2,7 @@ import json
 
 import pygame
 
+from engine.components.tags import Tags
 from engine.components.transform import Transform
 from engine.components.sprite import Sprite
 from engine.components.rigidbody import RigidBody
@@ -22,6 +23,7 @@ class SceneLoader:
         "BoxCollider": BoxCollider,
         "PlayerController": PlayerController,
         "Serialisable": Serialisable,
+        "Tags": Tags,
     }
 
     def __init__(self, world, resource_manager, prefabs_path):
@@ -57,7 +59,7 @@ class SceneLoader:
         for entity_data in level_data.get("entities", []):
             self.create_entity_from_data(entity_data)
 
-        return level_data.get("scene_settings", {})
+        return level_data
 
     def create_entity_from_data(self, entity_data):
         """Creates a single entity from a prefab and override data."""
