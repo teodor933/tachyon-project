@@ -62,7 +62,7 @@ class MainMenuScene(Scene):
         super().render()
 
     def on_enter(self, previous_scene: Optional["Scene"], data: Optional[Dict[str, Any]] = None) -> None:
-        print(f"Entering Main Menu from {previous_scene.__class__.__name__ if previous_scene else "startup"}")
+        print(f"Entering Main Menu from {previous_scene.__class__.__name__ if previous_scene else 'startup'}")
 
     def start_game(self):
         """Callback for the Play button."""

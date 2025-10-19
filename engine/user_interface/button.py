@@ -47,7 +47,7 @@ class Button(UIElement):
 
         if self.centre_surface: # Calculate the actual top-left position for the panel to pass
             panel_x = x - width // 2
-            panel_y = y - width // 2
+            panel_y = y - height // 2
         else:
             panel_x = x
             panel_y = y
