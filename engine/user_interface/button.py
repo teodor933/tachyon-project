@@ -74,16 +74,13 @@ class Button(UIElement):
                                  font_size=font_size,
                                  colour=text_colour,
                                  centre_text=centre_text,
-                                 layer=0 # Ensure text is rendered above the button element
+                                 layer=layer + 1 # Ensure text is rendered above the button element
                                  )
 
         self.panel.add_element(self.text_element, text_x, text_y) # Add text to the panel with relative coordinates
 
         self._update_surface()
 
-        print(f"Button center coords: ({x}, {y})")
-        print(f"Panel position: ({panel_x}, {panel_y})")
-        print(f"Button rect: {self._get_button_rect()}")
 
     def _update_surface(self    ):
         """Update the button surface based on the current state."""

@@ -48,7 +48,7 @@ class Panel(UIElement):
         if not self.visible:
             return False
 
-        for element in self.elements:
+        for element in self.elements: # Run the event handling for each child element
             if element.handle_event(event):
                 return True
         return False
@@ -58,17 +58,17 @@ class Panel(UIElement):
         if not self.visible:
             return None
 
-        if self.surface:
+        if self.surface: # Render a surface for the panel if it exists
             screen.blit(self.surface, (self.x, self.y))
 
-        for element in self.elements:
-            original_x = element.x
+        for element in self.elements: # Render every child element
+            original_x = element.x # Store current relative coordinates
             original_y = element.y
 
-            element.x = self.x + original_x
+            element.x = self.x + original_x # Convert relative coordinates to absolute
             element.y = self.y + original_y
 
-            element.render(screen)
+            element.render(screen) # Pass absolute screen coordinates to render on the screen
 
-            element.x = original_x
+            element.x = original_x # Convert absolute coordinates to relative to keep track of the relative position
             element.y = original_y
