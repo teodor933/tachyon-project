@@ -1,21 +1,19 @@
-import pygame
-from engine.core.game_engine import GameEngine
-from game.scenes.main_menu import MainMenuScene
+from engine.game_engine import GameEngine # Import the GameEngine class from the defined file
+from engine.scenes.main_menu import MainMenuScene
+
 
 def main():
-    # create and configure the engine
     engine = GameEngine(
-        width=1280,
-        height=720,
+        width=1920,
+        height=1080,
         title="Tachyon",
-        fps=240,
-        fixed_fps=120,
-    )
+        fps=60
+    ) # Create an instance of the game engine with a configuration
 
-    # start with main menu
-    engine.change_scene(MainMenuScene)
+    engine.scene_manager.change_scene("main_menu") # Make the initial scene the main menu scene
 
-    engine.run()
+    engine.run() # Run the game engine loop
 
-if __name__ == "__main__":
+if __name__ == "__main__": # Define entry point to avoid code running on imports
     main()
+
