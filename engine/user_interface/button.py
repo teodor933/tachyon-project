@@ -286,7 +286,6 @@ class Button(UIElement):
                     target = 1.0 if self.is_hovered else 0.0
                     self._expand_tween.to(target, duration=self._expansion_duration, ease=self._expansion_ease)
                 self._redraw_background()
-            return True
 
         elif event.type == pygame.MOUSEBUTTONDOWN: # Check if we pressed a mouse button
             if event.button == 1: # Left click input

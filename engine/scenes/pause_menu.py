@@ -69,7 +69,7 @@ class PauseMenuScene(Scene):
         height = 64
         gap = 18
         def add_pause_button(caption: str, y: int, on_click):
-            btn = Button(
+            button = Button(
                 x=base_x,
                 y=y,
                 width=width,
@@ -78,24 +78,24 @@ class PauseMenuScene(Scene):
                 text=caption,
                 font_size=28,
                 text_colour=(255, 255, 255),
-                normal_colour=(60, 60, 80),
-                hover_colour=(90, 90, 130),
-                pressed_colour=(50, 50, 70),
+                normal_colour=(25, 25, 25),
+                hover_colour=(70, 70, 70),
+                pressed_colour=(180, 180, 180),
                 centre_text=True,
                 centre_surface=False,
                 layer=2,
                 border_colour=(255, 255, 255),
                 border_width=1,
                 border_radius=0,
-                hover_tint=(43, 251, 238),
+                hover_tint=None,
                 padding=16,
                 expand_on_hover=True,
                 expanded_width=expanded,
                 expansion_duration=0.18,
                 expansion_ease="ease_out",
             )
-            self.add_ui_element(btn)
-            return btn
+            self.add_ui_element(button)
+            return button
 
         def resume():
             # Pop pause menu and resume underlying scene

@@ -30,7 +30,7 @@ class MainMenuScene(Scene):
         super().update(dt)
 
     def render(self) -> None:
-        self.engine.screen.fill((255, 0, 0))
+        self.engine.screen.fill((50, 50, 50))
         super().render()
 
     def on_enter(self, previous_scene: Optional["Scene"], data: Optional[Dict[str, Any]] = None) -> None:
@@ -75,16 +75,16 @@ class MainMenuScene(Scene):
                 text=caption,
                 font_size=36,
                 text_colour=(255, 255, 255),
-                normal_colour=(50, 150, 50),
-                hover_colour=(70, 200, 70),
-                pressed_colour=(30, 100, 30),
+                normal_colour=(25, 25, 25),
+                hover_colour=(70, 70, 70),
+                pressed_colour=(180, 180, 180),
                 centre_text=True,
                 centre_surface=False,
                 layer=1,
                 border_colour=(255, 255, 255),
                 border_width=1,
                 border_radius=0,
-                hover_tint=(43, 251, 238),
+                hover_tint=None,
                 padding=16,
                 expand_on_hover=True,
                 expanded_width=expanded,
