@@ -8,6 +8,7 @@ and begins the main game loop.
 from engine.game_engine import GameEngine
 from engine.scenes.main_menu import MainMenuScene
 from engine.scenes.pause_menu import PauseMenuScene
+from engine.scenes.game_scene import GameScene
 
 
 def main():

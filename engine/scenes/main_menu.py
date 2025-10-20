@@ -21,6 +21,10 @@ class MainMenuScene(Scene):
 
     def handle_events(self, events: list[pygame.event.Event]) -> None:
         super().handle_events(events)
+        for event in events:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                # ESC to quit
+                self.engine.set_is_running(False)
 
     def update(self, dt: float) -> None:
         super().update(dt)
@@ -91,10 +95,7 @@ class MainMenuScene(Scene):
             return button
 
         def start_game():
-            print("Starting game...")
+            self.engine.scene_manager.change_scene("game")
 
-        def show_pause():
-            self.engine.scene_manager.push_scene("pause_menu")
-
-        add_main_button("Play", base_y + 0 * (height + gap), show_pause)
+        add_main_button("Play", base_y + 0 * (height + gap), start_game)
 

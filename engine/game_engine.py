@@ -52,3 +52,9 @@ class GameEngine:
             pygame.display.flip()  # Update the entire screen with everything drawn this frame
 
         pygame.quit() # Clean up Pygame resources
+
+    def set_is_running(self, is_running: bool):
+        """
+        Set to true for the game to stop.
+        """
+        self._running = is_running
