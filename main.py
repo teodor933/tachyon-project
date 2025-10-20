@@ -1,19 +1,32 @@
-from engine.game_engine import GameEngine # Import the GameEngine class from the defined file
+"""
+Entry point for the project game.
+
+This module initialises the game engine, registers the starting scene,
+and begins the main game loop.
+"""
+
+from engine.game_engine import GameEngine
 from engine.scenes.main_menu import MainMenuScene
+from engine.scenes.pause_menu import PauseMenuScene
 
 
 def main():
+    """
+    Initialise and run the game engine.
+
+    Sets the initial scene to the main menu and starts the game loop.
+    """
     engine = GameEngine(
-        width=1920,
-        height=1080,
+        width=800,
+        height=600,
         title="Tachyon",
-        fps=60
+        fps=240
     ) # Create an instance of the game engine with a configuration
 
     engine.scene_manager.change_scene("main_menu") # Make the initial scene the main menu scene
 
     engine.run() # Run the game engine loop
 
-if __name__ == "__main__": # Define entry point to avoid code running on imports
+if __name__ == "__main__":
+    # Ensures the game only runs when this file is executed directly, not when imported as a module.
     main()
-

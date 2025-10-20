@@ -1,3 +1,8 @@
+"""
+Core game engine responsible for the main loop and window management.
+
+Initialises Pygame, manages the display, and coordinates scene updates.
+"""
 import pygame # Import the Pygame library
 
 from engine.scene_manager import SceneManager
@@ -7,7 +12,7 @@ class GameEngine:
     """Main game engine class."""
     def __init__(self, width: int = 800, height: int = 600, title: str = "Tachyon Engine", fps: int = 60):
         """
-        Initialise an instance of the game engine with Pygame setup.
+        Initialise the game engine and Pygame subsystems.
         :param width: The width of the game window in pixels.
         :param height: The height of the game window in pixels.
         :param title: The title displayed on the game window.
@@ -25,7 +30,11 @@ class GameEngine:
         self.scene_manager = SceneManager(self) # Create an instance of a scene manager
 
     def run(self):
-        """Main game loop."""
+        """
+        Start the main game loop.
+
+        Handles events, updates, and rendering until the window is closed.
+        """
         while self._running:
             dt = self._clock.tick(self._fps) / 1000.0 # Pause briefly to cap the frame rate at 60 FPS and converts
             # delta time to seconds
@@ -42,7 +51,4 @@ class GameEngine:
 
             pygame.display.flip()  # Update the entire screen with everything drawn this frame
 
-        pygame.quit() # Uninitialise all Pygame modules and close the program
-
-
-
+        pygame.quit() # Clean up Pygame resources
